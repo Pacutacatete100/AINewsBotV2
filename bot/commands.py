@@ -2,6 +2,9 @@ import discord
 from discord.ext import commands
 import json
 
+from ScienceDaily import scrape_for_title, scrape_for_sum
+
+
 with open('config.json') as con:
     config = json.load(con)
 TOKEN = config['token']
