@@ -1,6 +1,7 @@
 import requests
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup as soup
+from Article import Article
 
 science_daily_AI_url = 'https://www.sciencedaily.com/news/computers_math/artificial_intelligence'
 science_daily = "https://www.sciencedaily.com"
@@ -62,37 +63,36 @@ def scrape_for_top_link():
 
 def scrape_for_search(*args):
 
-    titles = []
     summaries = []
-    final_titles = []
     final_summaries = []
+    titles_for_summ = []
+    #title = None
+    articles = []
 
     page_soup = get_page_html(
         'https://www.sciencedaily.com/news/computers_math/artificial_intelligence')
 
-    html_titles = page_soup.find_all("h3", "latest-head")
-    for element in html_titles:
-        titles.append(element.text)
+    latest_summs_div = page_soup.find(
+        "div", {"id": "summaries"}).find_all("div", "latest-summary")
 
-    for word in args:
-        for title in titles:
-            if word in title:
-                final_titles.append(title)
+    for summ in latest_summs_div:
+        more_url = science_daily + \
+            summ.find("span",
+                      "more").find("a")["href"]
 
-    return final_titles
+        page_soup_2 = get_page_html(more_url)
+        headline = page_soup_2.find("h1", "headline").text
+
+        summary = page_soup_2.find("dd", {"id": "abstract"}).text
+
+        articles.append(Article(headline, summary, "kkk"))
+
+    for article in articles:
+        if article.matches_search(*args):
+            print(article.title)
+            print(article.summary)
+            # TODO this works but it only prints 1 article
 
 
 # TODO: finish scraping site for elements, use github of old bot as reference
 scrape_for_search("Quantum")  # for testing only
-
-# html_summaries = page_soup.find_all("div", "latest-summary")
-
-# for summ in html_summaries:
-#     html_summaries_links = science_daily + \
-#         summ.find("span", "more").find("a")["href"]
-#     summaries.append(html_summaries_links)
-
-# for summary in summaries:
-#     page_soup_2 = get_page_html(summary)
-#     final_summaries.append(page_soup_2.find("div", {"id": "story_text"}).find(
-#         "p", {"id": "first"}).text)
