@@ -5,3 +5,4 @@ config.json
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+bot/__pycache__/ScienceDaily.cpython-36.pyc

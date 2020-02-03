@@ -1,8 +1,8 @@
+from ScienceDaily import scrape_for_search, scrape_for_top_link, scrape_for_top_sum, scrape_for_top_title
 import discord
 from discord.ext import commands
 import json
-
-from ScienceDaily import scrape_for_title, scrape_for_sum
+import datetime
 
 
 with open('config.json') as con:
@@ -16,6 +16,7 @@ client = commands.Bot(command_prefix='!')
 @client.event
 async def on_ready():
     print('online')
+    # TODO: send top link every 24 hours
 
 
 @client.command()  # addition
@@ -56,15 +57,41 @@ async def github(ctx):
 
 @client.command()  # help
 async def commandhelp(ctx):
-    message = '**multiply**: _numbers you want me to multiply separated by spaces_\n**add**: _numbers you want me to add separated by spaces_\n**factorial**: _number you want me to find the factorial of_\n **search**: _enter a search term (or many separated by commas) and I will find them in an article_\n'
+    message = '''**multiply**: _numbers you want me to multiply separated by spaces_\n
+    **add**: _numbers you want me to add separated by spaces_\n
+    **factorial**: _number you want me to find the factorial of_\n
+    **search**: _enter a search term (or many separated by commas) and I will find them in an article_\n'''
 
     embed = discord.Embed(
         title='Help',
         description=message,
-        color=discord.Colour.blue()
-
+        color=discord.Colour.blue(),
     )
     await ctx.send(embed=embed)
 
+
+@client.command()
+async def top(ctx):
+    title = scrape_for_top_title()
+    summary = scrape_for_top_sum()
+    link = scrape_for_top_link()
+
+    embed = discord.Embed(
+        title=title,
+        description=summary,
+        color=discord.Colour.blue(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    embed.set_author(name="Daily News")
+    embed.add_field(name="Link", value=link)
+
+    await ctx.send(embed=embed)
+
+
+@client.command()
+async def search(ctx, *args):
+    titles = scrape_for_search(*args)
+    for title in titles:
+        await ctx.send(title)
 
 client.run(TOKEN)
