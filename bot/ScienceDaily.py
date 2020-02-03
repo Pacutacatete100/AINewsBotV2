@@ -1,7 +1,6 @@
 import requests
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup as soup
-x = 0
 
 science_daily_AI_url = 'https://www.sciencedaily.com/news/computers_math/artificial_intelligence'
 science_daily = "https://www.sciencedaily.com"
@@ -67,7 +66,6 @@ def scrape_for_search(*args):
     summaries = []
     final_titles = []
     final_summaries = []
-    html_summaries_links = None
 
     page_soup = get_page_html(
         'https://www.sciencedaily.com/news/computers_math/artificial_intelligence')
