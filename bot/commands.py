@@ -1,11 +1,12 @@
-from ScienceDaily import scrape_for_search_title, scrape_for_top_link, scrape_for_top_sum, scrape_for_top_title
+from ScienceDaily import scrape_for_search, scrape_for_top_link, scrape_for_top_sum, scrape_for_top_title
 import discord
 from discord.ext import commands
 import json
 import datetime
+from Article import Article
 
 
-with open('config.json') as con:
+with open('pyconfig.json') as con:
     config = json.load(con)
 TOKEN = config['token']
 
@@ -90,8 +91,8 @@ async def top(ctx):
 
 @client.command()
 async def search(ctx, *args):
-    titles = scrape_for_search_title(*args)
-    for title in titles:
-        await ctx.send(title)
+    articles = scrape_for_search(*args)
+    for a in articles:
+        await ctx.send("**" + a.title + "**: " + a.summary + a.link + "\n")
 
 client.run(TOKEN)

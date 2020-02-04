@@ -66,6 +66,7 @@ def scrape_for_search(*args):
     more_URLs = []
     headlines = []
     summaries = []
+    sources = []
     articles = []
     final_articles = []
 
@@ -85,26 +86,24 @@ def scrape_for_search(*args):
     for more in more_URLs:
         page_soup_2 = get_page_html(more)
 
-        # !only getting 1 title (Quantum computers learn to mark their own work, 9th one)
         headline = page_soup_2.find("h1", "headline").text
-        headlines.append(headline)
+        headlines.append(headline.lower())
 
         summary = page_soup_2.find("dd", {"id": "abstract"}).text
         summaries.append(summary)
 
-    for head in headlines:
-        for summ in summaries:
-            articles.append(Article(head, summ, "kkk"))
+        source = page_soup_2.find(
+            "div", {"id": "story_source"}).find("a")["href"]
+        sources.append(source)
 
-    for word in args:
-        for art in articles:
-            if word in art.title:
-                final_articles.append(art)
+    for h, s, l in zip(headlines, summaries, sources):
+        articles.append(Article(h, s, l))
 
-    # return final_articles
-    for art in final_articles:
-        print(art.title)
-        print(art.summary)
+    for a in articles:
+        if all(word in a.title for word in args):
+            final_articles.append(Article(a.title.title(), a.summary, a.link))
+
+    return final_articles
 
 
-scrape_for_search("Quantum")  # for testing only
+scrape_for_search("robot")  # for testing only
