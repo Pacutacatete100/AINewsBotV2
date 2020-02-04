@@ -63,11 +63,11 @@ def scrape_for_top_link():
 
 def scrape_for_search(*args):
 
+    more_URLs = []
+    headlines = []
     summaries = []
-    final_summaries = []
-    titles_for_summ = []
-    #title = None
     articles = []
+    final_articles = []
 
     page_soup = get_page_html(
         'https://www.sciencedaily.com/news/computers_math/artificial_intelligence')
@@ -75,24 +75,36 @@ def scrape_for_search(*args):
     latest_summs_div = page_soup.find(
         "div", {"id": "summaries"}).find_all("div", "latest-summary")
 
-    for summ in latest_summs_div:
-        more_url = science_daily + \
-            summ.find("span",
-                      "more").find("a")["href"]
+    latest_heads = page_soup.find(
+        "div", {"id": "summaries"}).find_all("h3", "latest-head")
 
-        page_soup_2 = get_page_html(more_url)
+    for sums in latest_summs_div:
+        more_URLs.append(
+            science_daily + sums.find("span", "more").find("a")["href"])
+
+    for more in more_URLs:
+        page_soup_2 = get_page_html(more)
+
+        # !only getting 1 title (Quantum computers learn to mark their own work, 9th one)
         headline = page_soup_2.find("h1", "headline").text
+        headlines.append(headline)
 
         summary = page_soup_2.find("dd", {"id": "abstract"}).text
+        summaries.append(summary)
 
-        articles.append(Article(headline, summary, "kkk"))
+    for head in headlines:
+        for summ in summaries:
+            articles.append(Article(head, summ, "kkk"))
 
-    for article in articles:
-        if article.matches_search(*args):
-            print(article.title)
-            print(article.summary)
-            # TODO this works but it only prints 1 article
+    for word in args:
+        for art in articles:
+            if word in art.title:
+                final_articles.append(art)
+
+    # return final_articles
+    for art in final_articles:
+        print(art.title)
+        print(art.summary)
 
 
-# TODO: finish scraping site for elements, use github of old bot as reference
 scrape_for_search("Quantum")  # for testing only
