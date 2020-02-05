@@ -1,6 +1,6 @@
 import requests
 from urllib.request import Request, urlopen
-from bs4 import BeautifulSoup as soup
+from bs4 import BeautifulSoup
 from Article import Article
 
 science_daily_AI_url = 'https://www.sciencedaily.com/news/computers_math/artificial_intelligence'
@@ -8,9 +8,11 @@ science_daily = "https://www.sciencedaily.com"
 
 
 def get_page_html(url):
-    req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    webpage = urlopen(req).read()
-    page_soup = soup(webpage, "html.parser")
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+    }
+    result = requests.get(science_daily_AI_url, headers=headers)
+    page_soup = BeautifulSoup(result.content.decode())
     return page_soup
 
 
@@ -87,7 +89,7 @@ def scrape_for_search(*args):
     for more in more_URLs:
         page_soup_2 = get_page_html(more)
 
-        headline = page_soup_2.find("h1", "headline").text
+        headline = page_soup_2.find("h1", "headline").get_text()
         headlines.append(headline.lower())
 
         summary = page_soup_2.find("dd", {"id": "abstract"}).text
