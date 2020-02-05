@@ -12,7 +12,7 @@ def get_page_html(url):
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
     }
     result = requests.get(science_daily_AI_url, headers=headers)
-    page_soup = BeautifulSoup(result.content.decode())
+    page_soup = BeautifulSoup(result.content.decode(), 'html5lib')
     return page_soup
 
 
@@ -89,7 +89,8 @@ def scrape_for_search(*args):
     for more in more_URLs:
         page_soup_2 = get_page_html(more)
 
-        headline = page_soup_2.find("h1", "headline").get_text()
+        headline = page_soup_2.find(
+            "h1", class_="headline")  # !giving me NoneType
         headlines.append(headline.lower())
 
         summary = page_soup_2.find("dd", {"id": "abstract"}).text
