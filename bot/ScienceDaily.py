@@ -9,10 +9,10 @@ science_daily = 'https://www.sciencedaily.com'
 
 def get_page_html(url):
 
-    result = requests.get(science_daily_AI_url, headers={
+    result = requests.get(url, headers={
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
-    })
-    page_soup = BeautifulSoup(result.content, 'html.parser')
+    }).text
+    page_soup = BeautifulSoup(result, 'html.parser')
     return page_soup
 
 
@@ -20,29 +20,39 @@ def scrape_for_top_title():
     page_soup = get_page_html(
         'https://www.sciencedaily.com/news/computers_math/artificial_intelligence')
 
-    title_html_element = page_soup.find('div', id='featured_tab_1')
-    title = title_html_element.find('h3', 'latest-head').text
+    title_html_element = page_soup.find(id='featured_tab_1')
 
-    return title
+    print(title_html_element.h3.a.text)
 
 
 def scrape_for_top_sum():
     page_soup = get_page_html(
         'https://www.sciencedaily.com/news/computers_math/artificial_intelligence')
 
-    title_html_element = page_soup.find('div', id='featured_tab_1')
+    title_html_element = page_soup.find(id='featured_tab_1')
 
-    summary_html_element = title_html_element.find(
-        'div', class_='latest-summary').find('span', class_='more').find('a')
-    summary_link = summary_html_element['href']
-    more_url = science_daily + summary_link
+    more_link = title_html_element.find(
+        class_='latest-summary').find(class_='more').a['href']
 
-    page_soup2 = get_page_html(more_url)
+    more = science_daily + more_link
 
-    summary = page_soup2.find('div', id='story_text').find(
-        'p', id='first').text
+    soup2 = get_page_html(more)
 
-    return summary
+    # summary = soup2.find(id='story_text')
+
+    print(soup2)
+
+    # summary_html_element = title_html_element.find(
+    #     'div', class_='latest-summary').find('span', class_='more').find('a')
+    # summary_link = summary_html_element['href']
+    # more_url = science_daily + summary_link
+
+    # page_soup2 = get_page_html(more_url)
+
+    # summary = page_soup2.find('div', id='story_text').find(
+    #     'p', id='first').text
+
+    # return summary
 
 
 def scrape_for_top_link():
@@ -110,4 +120,6 @@ def scrape_for_search(*args):
     return final_articles
 
 
-scrape_for_search('robot')  # for testing only
+# scrape_for_search('robot')  # for testing only
+scrape_for_top_title()
+scrape_for_top_sum()
