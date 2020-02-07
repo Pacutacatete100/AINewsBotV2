@@ -5,10 +5,8 @@ import json
 import datetime
 from Article import Article
 
-
-with open('pyconfig.json') as con:
-    config = json.load(con)
-TOKEN = config['token']
+file1 = open('config.txt', 'r+')
+TOKEN = file1.read()
 
 
 client = commands.Bot(command_prefix='!')
@@ -92,7 +90,18 @@ async def top(ctx):
 @client.command()
 async def search(ctx, *args):
     articles = scrape_for_search(*args)
+
     for a in articles:
-        await ctx.send("**" + a.title + "**: " + a.summary + a.link + "\n")
+        embed = discord.Embed(
+            title=a.title,
+            description=a.summary,
+            color=discord.Colour.blue(),
+            timestamp=datetime.datetime.utcnow()
+        )
+        embed.set_author(name="Daily News")
+        embed.add_field(name="Link", value=a.link)
+
+        await ctx.send(embed=embed)
+
 
 client.run(TOKEN)
