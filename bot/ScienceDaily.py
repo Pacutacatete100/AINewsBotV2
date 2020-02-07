@@ -66,6 +66,8 @@ def scrape_for_search(*args):
     sources = []
     articles = []
     final_articles = []
+    key_words = []
+    final_key_words = []
 
     page_soup = get_page_html(
         'https://www.sciencedaily.com/news/computers_math/artificial_intelligence')
@@ -101,17 +103,31 @@ def scrape_for_search(*args):
             'div', id='story_source').find('a')['href']
         sources.append(source)
 
-    for h, s, l in zip(headlines, summaries, sources):
-        articles.append(Article(h, s, l))
+        keywords = page_soup_2.find(id='metakeywords')['content']
+        key_words.append(keywords)
+
+    for w in key_words:
+        words = w.split('; ')
+        final_key_words.append(words)
+
+    for h, s, l, w in zip(headlines, summaries, sources, final_key_words):
+        lower_keywords = [x.lower() for x in w]
+        articles.append(Article(h.lower(), s, l, lower_keywords))
 
     for a in articles:
-        if all(word in a.title for word in args):
-            final_articles.append(Article(a.title.title(), a.summary, a.link))
+        in_title = all(word in a.title for word in args)
+        in_keywords = any(word in a.key_words for word in args)
+
+        if in_title or in_keywords:
+            final_articles.append(
+                Article(a.title.title(), a.summary,
+                        a.link, a.key_words))
 
     return final_articles
 
 
-# TODO: update search command to also search for keywords that are in the html 'meta' tag
 # TODO: write articles to csv file, somehow upload that to server and have scraper update csv file every hour, send if new article,
-#       --use to search for key words
 # TODO: use more sources
+
+# scrape_for_search('moon', 'biology')
+# print('done')
