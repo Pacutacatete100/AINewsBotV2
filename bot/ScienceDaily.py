@@ -114,3 +114,4 @@ def scrape_for_search(*args):
 # TODO: update search command to also search for keywords that are in the html 'meta' tag
 # TODO: write articles to csv file, somehow upload that to server and have scraper update csv file every hour, send if new article,
 #       --use to search for key words
+# TODO: use more sources
