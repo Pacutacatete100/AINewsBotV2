@@ -1,4 +1,4 @@
-from ScienceDaily import scrape_for_search, scrape_for_top_link, scrape_for_top_sum, scrape_for_top_title
+from ScienceDaily import scrape_for_search, scrape_for_newest_link, scrape_for_newest_sum, scrape_for_newest_title
 import discord
 from discord.ext import commands
 import json
@@ -49,6 +49,17 @@ async def factorial(ctx, *args):
     await ctx.send(product)
 
 
+@client.command()
+async def sub(ctx, *args):
+
+    first = int(args[0])
+
+    for n in args[1:]:
+        first -= int(n)
+
+    await ctx.send(first)
+
+
 @client.command()  # github
 async def github(ctx):
     await ctx.send('https://github.com/Pacutacatete100/AINewsBotV2')
@@ -70,10 +81,10 @@ async def commandhelp(ctx):
 
 
 @client.command()
-async def top(ctx):
-    title = scrape_for_top_title()
-    summary = scrape_for_top_sum()
-    link = scrape_for_top_link()
+async def newest(ctx):
+    title = scrape_for_newest_title()
+    summary = scrape_for_newest_sum()
+    link = scrape_for_newest_link()
 
     embed = discord.Embed(
         title=title,
@@ -102,6 +113,5 @@ async def search(ctx, *args):
         embed.add_field(name="Link", value=a.link)
 
         await ctx.send(embed=embed)
-
 
 client.run(TOKEN)

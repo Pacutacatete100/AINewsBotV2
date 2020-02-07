@@ -15,7 +15,7 @@ def get_page_html(url):
     return page_soup
 
 
-def scrape_for_top_title():
+def scrape_for_newest_title():
     page_soup = get_page_html(
         'https://www.sciencedaily.com/news/computers_math/artificial_intelligence')
 
@@ -24,7 +24,7 @@ def scrape_for_top_title():
     return title_html_element.h3.a.text
 
 
-def scrape_for_top_sum():
+def scrape_for_newest_sum():
     page_soup = get_page_html(
         'https://www.sciencedaily.com/news/computers_math/artificial_intelligence')
 
@@ -40,7 +40,7 @@ def scrape_for_top_sum():
     return soup_2.find(id='abstract').text
 
 
-def scrape_for_top_link():
+def scrape_for_newest_link():
     page_soup = get_page_html(
         'https://www.sciencedaily.com/news/computers_math/artificial_intelligence')
 
@@ -109,3 +109,8 @@ def scrape_for_search(*args):
             final_articles.append(Article(a.title.title(), a.summary, a.link))
 
     return final_articles
+
+
+# TODO: update search command to also search for keywords that are in the html 'meta' tag
+# TODO: write articles to csv file, somehow upload that to server and have scraper update csv file every hour, send if new article,
+#       --use to search for key words
