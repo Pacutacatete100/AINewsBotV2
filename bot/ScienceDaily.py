@@ -30,8 +30,6 @@ def scrape_for_top_sum():
 
     title_html_element = page_soup.find(id='featured_tab_1')
 
-    # print(title_html_element)
-
     more_link = title_html_element.find(
         class_='latest-summary').find(class_='more').a['href']
 
@@ -61,7 +59,6 @@ def scrape_for_top_link():
 
 
 def scrape_for_search(*args):
-    # git branch test
 
     more_URLs = []
     headlines = []
