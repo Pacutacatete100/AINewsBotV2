@@ -7,5 +7,5 @@ pyconfig.json
 .idea/workspace.xml
 bot/__pycache__/ScienceDaily.cpython-36.pyc
 __pycache__
-.vscode/settings.json
 .idea/inspectionProfiles/Project_Default.xml
+.vscode/settings.json
