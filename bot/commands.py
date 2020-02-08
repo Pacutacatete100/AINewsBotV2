@@ -1,4 +1,4 @@
-from ScienceDaily import scrape_for_search, scrape_for_newest_link, scrape_for_newest_sum, scrape_for_newest_title
+from ScienceDaily import *
 import discord
 from discord.ext import commands
 import json
@@ -6,7 +6,8 @@ import datetime
 from Article import Article
 
 file1 = open('config.txt', 'r+')
-TOKEN = file1.read()
+lines = file1.readlines()
+TOKEN = lines[0]
 
 
 client = commands.Bot(command_prefix='!')
