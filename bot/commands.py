@@ -1,13 +1,16 @@
 from ScienceDaily import *
+from rMachineLearning import *
 import discord
 from discord.ext import commands
 import json
 import datetime
 from Article import Article
 
-file1 = open('config.txt', 'r+')
-lines = file1.readlines()
-TOKEN = lines[0]
+with open('myconfig.json', 'r') as myfile:
+    data = myfile.read()
+obj = json.loads(data)
+
+TOKEN = str(obj["token"])
 
 
 client = commands.Bot(command_prefix='!')
@@ -114,5 +117,10 @@ async def search(ctx, *args):
         embed.add_field(name="Link", value=a.link)
 
         await ctx.send(embed=embed)
+
+
+@client.command()
+async def reddit(ctx, *args):
+    await ctx.send(search_r_titles(*args))
 
 client.run(TOKEN)
