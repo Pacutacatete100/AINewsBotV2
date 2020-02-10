@@ -104,7 +104,9 @@ async def newest(ctx):
 
 @client.command()
 async def search(ctx, *args):
-    articles = scrape_for_search(*args)
+    SDarticles = scrape_for_search(*args)
+    RMLarticles = search_r_titles(*args)
+    articles = SDarticles + RMLarticles
 
     for a in articles:
         embed = discord.Embed(
@@ -114,13 +116,24 @@ async def search(ctx, *args):
             timestamp=datetime.datetime.utcnow()
         )
         embed.set_author(name="Daily News")
-        embed.add_field(name="Link", value=a.link)
+        # embed.add_field(name="Link", value=a.link)
 
         await ctx.send(embed=embed)
 
 
 @client.command()
 async def reddit(ctx, *args):
-    await ctx.send(search_r_titles(*args))
+    articles = search_r_titles(*args)
+
+    for a in articles:
+        embed = discord.Embed(
+            title=a.title,
+            description=a.summary,
+            color=discord.Colour.blue(),
+            timestamp=datetime.datetime.utcnow()
+        )
+        embed.set_author(name="Daily News")
+
+        await ctx.send(embed=embed)
 
 client.run(TOKEN)

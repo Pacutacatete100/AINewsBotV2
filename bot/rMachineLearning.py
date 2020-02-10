@@ -11,8 +11,6 @@ reddit = praw.Reddit(client_id=str(obj["client_id"]),
                      user_agent='AINewsScraper', username='AlfaXBotUser')
 rML = reddit.subreddit('MachineLearning')
 
-titles = []
-
 
 def remove_dup(arr):
     final_list = []
@@ -23,46 +21,62 @@ def remove_dup(arr):
 
 
 def get_r_research_titles():
-    for submission in rML.new(limit=500):
+
+    articles = []
+    summaries = []
+    titles = []
+
+    for submission in rML.new(limit=100):
         title = submission.title
         if title.startswith('[R]'):
             titles.append(title.strip('[R]'))
+            summaries.append(submission.selftext)
 
         if title.startswith('[Research]'):
             titles.append(title.strip('[Research]'))
+            summaries.append(submission.selftext)
 
-    return titles
+    for t, s in zip(titles, summaries):
+        articles.append(Article(t, s))
+
+    return articles  # returns list of articles with only title and summary
 
 
 def get_r_news_titles():
-    for submission in rML.new(limit=500):
-        title = submission.title
-        if title.startswith('[N]'):
-            titles.append(title.strip('[N]'))
 
-        if title.startswith('[News]'):
-            titles.append(title.strip('[News]'))
+    articles = []
+    summaries = []
+    titles = []
 
-    return titles
+    for submission in rML.new(limit=100):
+
+        if submission.title.startswith('[N]'):
+            titles.append(submission.title.strip('[N]'))
+            summaries.append(submission.selftext)
+
+        if submission.title.startswith('[News]'):
+            titles.append(submission.title.strip('[News]'))
+            summaries.append(submission.selftext)
+
+    for t, s in zip(titles, summaries):
+        articles.append(Article(t, s))
+
+    return articles  # returns list of articles with only title and summary
 
 
 def search_r_titles(*args):
-    research_titles = map(lambda t: t.lower(),
-                          get_r_research_titles() + get_r_news_titles())
 
-    searched_titles = []
-    articles = []
+    research = get_r_research_titles()
+    news = get_r_news_titles()
 
-    for title in research_titles:
-        if all(word in title for word in args):
-            searched_titles.append(title.title())
+    articles = research + news
+    final_articles = []
 
-    final_titles = remove_dup(searched_titles)
+    for a in articles:
+        if all(word in a.title.lower() for word in args):
+            final_articles.append(a)
 
-    for t in final_titles:
-        articles.append(Article(t))
-
-    return articles
+    return final_articles
 
 
-search_r_titles('intel', 'habana')
+search_r_titles('unlearning')
