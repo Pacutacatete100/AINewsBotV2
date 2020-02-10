@@ -116,7 +116,7 @@ async def search(ctx, *args):
             timestamp=datetime.datetime.utcnow()
         )
         embed.set_author(name="Daily News")
-        # embed.add_field(name="Link", value=a.link)
+        embed.add_field(name="Link", value=a.link)
 
         await ctx.send(embed=embed)
 

@@ -1,6 +1,7 @@
 import praw
 import json
 from Article import Article
+import sys
 
 with open('myconfig.json', 'r') as myfile:
     data = myfile.read()
