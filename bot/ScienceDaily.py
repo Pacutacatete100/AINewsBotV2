@@ -7,7 +7,6 @@ science_daily = 'https://www.sciencedaily.com'
 
 
 def get_page_html(url):
-
     result = requests.get(url, headers={
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
     }).text
@@ -127,7 +126,7 @@ def scrape_for_search(*args):
 
 
 # TODO: write articles to csv file, somehow upload that to server and have scraper update csv file every hour, send if new article,
-# TODO: use more sources
+# TODO: use more sources, http://news.mit.edu/topic/artificial-intelligence2
 
-scrape_for_search('moon', 'biology')
+scrape_for_search('quantum')
 # print('done')
