@@ -126,7 +126,6 @@ def scrape_for_search(*args):
 
 
 # TODO: write articles to csv file, somehow upload that to server and have scraper update csv file every hour, send if new article,
-# TODO: use more sources, http://news.mit.edu/topic/artificial-intelligence2
+# TODO: use more sources, http://news.mit.edu/topic/artificial-intelligence2, https://news.ycombinator.com/
 
-scrape_for_search('quantum')
 # print('done')
